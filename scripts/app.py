@@ -1,21 +1,20 @@
-# app.py
-
 import streamlit as st
+st.set_page_config(
+    page_title="💸 Financial QA Chatbot",
+    page_icon="💬",
+    layout="wide",
+)
+
+# Move all other imports below set_page_config
 import rag_full_system
 import ft_system
 import os
 import time
 import preprocessing
 
-# =================================================================================================
 # Load components and caching
-# =================================================================================================
-
-
-
 @st.cache_resource
 def load_rag_components():
-    """Load and cache the RAG components to avoid reloading on each interaction."""
     try:
         return rag_full_system.load_all_components()
     except Exception as e:
@@ -24,7 +23,6 @@ def load_rag_components():
 
 @st.cache_resource
 def load_ft_components():
-    """Load and cache the fine-tuned model components."""
     try:
         return ft_system.load_ft_model()
     except Exception as e:
@@ -37,16 +35,6 @@ ft_components = load_ft_components()
 
 if rag_components is None or ft_components is None:
     st.stop()
-
-# =================================================================================================
-# Streamlit UI Setup
-# =================================================================================================
-
-st.set_page_config(
-    page_title="💸 Financial QA Chatbot",
-    page_icon="💬",
-    layout="wide",
-)
 
 # Add a bit of custom CSS
 st.markdown("""
