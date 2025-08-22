@@ -1,11 +1,13 @@
 import streamlit as st
+
+# set_page_config MUST be the first Streamlit command
 st.set_page_config(
     page_title="💸 Financial QA Chatbot",
     page_icon="💬",
     layout="wide",
 )
 
-# Move all other imports below set_page_config
+# Now import other modules
 import rag_full_system
 import ft_system
 import os
@@ -29,6 +31,7 @@ def load_ft_components():
         st.error(f"❌ Failed to load fine-tuned model. Error: {e}")
         return None
 
+# Initialize preprocessing and load components
 initialize = preprocessing.initialize()  # Ensure preprocessing is done before loading components
 rag_components = load_rag_components()
 ft_components = load_ft_components()
@@ -52,7 +55,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.title("💸 Financial QA Chatbot")
-st.markdown("Ask financial questions about Apple’s 2023/2024 performance. Compare **RAG vs Fine-Tuned Model**.")
+st.markdown("Ask financial questions about Apple's 2023/2024 performance. Compare **RAG vs Fine-Tuned Model**.")
 
 # Sidebar controls
 st.sidebar.header("⚙️ System Settings")
