@@ -4,11 +4,19 @@ import os
 import torch
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 import time
+import ft_dataset_prep as prepare_ft_dataset
+import ft_model_tuning as model_tuning
+
 
 def load_ft_model():
     """
     Loads the fine-tuned GPT-2 model and tokenizer from the local directory.
     """
+
+    prepare_ft_dataset.prepare_ft_dataset()
+
+    model_tuning.model_fine_tuning()
+
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.abspath(os.path.join(script_dir, os.pardir))
     model_dir = os.path.join(project_root, "models", "gpt2-finetuned")

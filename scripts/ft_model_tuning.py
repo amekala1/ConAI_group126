@@ -43,7 +43,7 @@ def get_baseline_predictions(model, tokenizer, test_questions):
 
     return [tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
 
-if __name__ == "__main__":
+def model_fine_tuning():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.abspath(os.path.join(script_dir, os.pardir))
 
