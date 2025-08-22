@@ -244,8 +244,8 @@ def initialize():
     Main preprocessing pipeline: extract, clean, chunk, embed, and index PDF data.
     """
     #Paths
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.abspath(os.path.join(script_dir, os.pardir))
+    #script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.getcwd() #os.path.abspath(os.path.join(script_dir, os.pardir))
     data_dir = os.path.join(project_root, "data")
     os.makedirs(data_dir, exist_ok=True)
 

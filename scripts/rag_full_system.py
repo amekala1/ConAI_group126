@@ -33,8 +33,8 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(
 # Paths — adjust if your layout differs
 # ---------------------------
 def _project_paths() -> Dict[str, str]:
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.abspath(os.path.join(script_dir, os.pardir))
+    #script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.getcwd() #os.path.abspath(os.path.join(script_dir, os.pardir))
     return {
         "root": project_root,
         "embed_model": "sentence-transformers/all-MiniLM-L6-v2",

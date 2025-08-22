@@ -9,8 +9,8 @@ def prepare_ft_dataset():
     Loads Q/A pairs from a text file, formats them for supervised instruction fine-tuning,
     and saves the result to a JSON file.
     """
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.abspath(os.path.join(script_dir, os.pardir))
+    #script_dir = os.getcwd() #os.path.dirname(os.path.abspath(__file__))
+    project_root = os.getcwd() #os.path.dirname(os.path.abspath(__file__))#os.path.abspath(os.path.join(script_dir, os.pardir))
     qa_text_path = os.path.join(project_root, "data", "Q&A.txt")
     
     if not os.path.exists(qa_text_path):

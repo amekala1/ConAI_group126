@@ -44,8 +44,8 @@ def get_baseline_predictions(model, tokenizer, test_questions):
     return [tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
 
 def model_fine_tuning():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.abspath(os.path.join(script_dir, os.pardir))
+    #script_dir = os.getcwd() #os.path.dirname(os.path.abspath(__file__))
+    project_root = os.getcwd() #os.path.abspath(os.path.join(script_dir, os.pardir))
 
     # 3.2: Model Selection - Using GPT-2 for a generative task
     model_name = "gpt2"
