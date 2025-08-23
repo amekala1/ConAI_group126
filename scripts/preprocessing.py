@@ -306,7 +306,7 @@ def initialize():
         embedding_model = SentenceTransformer(embedding_model_path, device=device)
     else:
         # Download from HuggingFace if local model not found
-        embedding_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2", device=device)
+        embedding_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2", cache_folder= embedding_model_path, device=device)
 
     # FAISS
     faiss_out = os.path.join(data_dir, "faiss_index.bin")               
