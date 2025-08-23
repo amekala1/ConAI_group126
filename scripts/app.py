@@ -9,25 +9,26 @@ st.set_page_config(
 
 # Now import other modules
 import rag_full_system
+import ft_system
 import os
 import time
 import preprocessing
 
 # Load components and caching
 @st.cache_resource
-def load_rag_components():
+def load_ft_components():
     try:
-        return rag_full_system.load_all_components()
+        return ft_system.load_ft_model()
     except Exception as e:
-        st.error(f"❌ Failed to load RAG components. Error: {e}")
+        st.error(f"❌ Failed to load fine-tuned model. Error: {e}")
         return None
 
 # Initialize preprocessing and load components
-initialize = preprocessing.initialize()  # Ensure preprocessing is done before loading components
-rag_components = load_rag_components()
-#ft_components = load_ft_components()
+#initialize = preprocessing.initialize()  # Ensure preprocessing is done before loading components
+#rag_components = load_rag_components()
+ft_components = load_ft_components()
 
-if rag_components is None:
+if ft_components is None:
     st.stop()
 
 # Add a bit of custom CSS
@@ -78,34 +79,25 @@ if prompt := st.chat_input("Ask a question about Apple's 2023/2024 financials...
 
 
         # Only RAG System is available
-        with st.spinner("🔎 Searching for an answer with the RAG System..."):
-            result = rag_full_system.run_rag_system(prompt, rag_components)
+        with st.spinner("🤖 Generating an answer with the Fine-Tuned Model..."):
+            result = ft_system.run_ft_system(prompt, ft_components)
 
-            # Extract results
-            answer = result['answer']
-            confidence = result['retrieval_confidence']
-            time_taken = result['response_time']
-            guardrail_message = result['guardrail_message']
+            if not result['is_relevant']:
+                st.warning(result['answer'])
+                full_response = result['answer']
+            else:
+                answer = result['answer']
+                confidence = result['confidence']
+                time_taken = result['response_time']
 
-            # Display metrics as cards
-            col1, col2, col3, col4 = st.columns(4)
-            with col1: st.metric("Method", "RAG System")
-            with col2: st.metric("Confidence", f"{confidence:.2f}")
-            with col3: st.metric("Time (s)", f"{time_taken:.2f}")
-            with col4: st.metric("Guardrail", guardrail_message)
+                # Display metrics as cards
+                col1, col2, col3 = st.columns(3)
+                with col1: st.metric("Method", "Fine-Tuned Model")
+                with col2: st.metric("Confidence", f"{confidence:.2f}")
+                with col3: st.metric("Time (s)", f"{time_taken:.2f}")
 
-            st.markdown(f"### 💡 Answer\n{answer}")
-
-            # Retrieved passages
-            with st.expander("📑 Show Retrieved Passages"):
-                if result['retrieved_passages']:
-                    for i, (passage, metadata) in enumerate(zip(result['retrieved_passages'], result['retrieved_metadata'])):
-                        st.markdown(f"**Source:** `{metadata['source']}`")
-                        st.write(passage)
-                else:
-                    st.info("No relevant passages were retrieved.")
-
-            full_response = answer
+                st.markdown(f"### 💡 Answer\n{answer}")
+                full_response = answer
 
         message_placeholder.markdown(full_response)
 
