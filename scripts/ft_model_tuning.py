@@ -14,9 +14,7 @@ from transformers import (
     TrainingArguments,
     DataCollatorForLanguageModeling,
 )
-from huggingface_hub import HfApi, login, create_repo
 from sklearn.metrics import accuracy_score
-import streamlit as st
 
 def compute_metrics(eval_pred):
     """
@@ -45,50 +43,13 @@ def get_baseline_predictions(model, tokenizer, test_questions):
 
     return [tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
 
-def push_to_huggingface_hub(model, tokenizer, repo_name, hf_token):
-    """
-    Push the fine-tuned model and tokenizer to Hugging Face Hub
-    """
-    try:
-        # Login to Hugging Face
-        login(token=hf_token)
-        
-        # Create repository if it doesn't exist
-        try:
-            create_repo(repo_name, token=hf_token, exist_ok=True)
-        except Exception as e:
-            st.warning(f"Repo creation note: {e}")
-        
-        # Push model and tokenizer to Hub
-        model.push_to_hub(repo_name, use_temp_dir=False)
-        tokenizer.push_to_hub(repo_name, use_temp_dir=False)
-        
-        st.success(f"✅ Model successfully pushed to Hugging Face Hub: {repo_name}")
-        return True
-        
-    except Exception as e:
-        st.error(f"❌ Error pushing to Hugging Face Hub: {e}")
-        return False
-
-def model_fine_tuning():
+if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.abspath(os.path.join(script_dir, os.pardir))
 
     # 3.2: Model Selection - Using GPT-2 for a generative task
     model_name = "gpt2"
     model_dir = os.path.join(project_root, "models", "gpt2")
-
-    try:
-        tokenizer = GPT2Tokenizer.from_pretrained(model_dir, local_files_only=True)
-        model = GPT2LMHeadModel.from_pretrained(model_dir, local_files_only=True)
-        tokenizer.pad_token = tokenizer.eos_token
-    except OSError:
-        st.info("Local model not found. Downloading from Hugging Face...")
-        tokenizer = GPT2Tokenizer.from_pretrained(model_name)
-        model = GPT2LMHeadModel.from_pretrained(model_name)
-        tokenizer.pad_token = tokenizer.eos_token
-        tokenizer.save_pretrained(model_dir)
-        model.save_pretrained(model_dir)
 
     # Temporary directory for trainer output
     output_temp_dir = os.path.join(project_root, "output_temp", f"tmp_trainer_{int(time.time())}")
@@ -99,7 +60,7 @@ def model_fine_tuning():
         model = GPT2LMHeadModel.from_pretrained(model_dir, local_files_only=True)
         tokenizer.pad_token = tokenizer.eos_token
     except OSError:
-        st.info("Local model not found. Downloading from Hugging Face...")
+        print("Local model not found. Downloading from Hugging Face...")
         tokenizer = GPT2Tokenizer.from_pretrained(model_name)
         model = GPT2LMHeadModel.from_pretrained(model_name)
         tokenizer.pad_token = tokenizer.eos_token
@@ -129,12 +90,12 @@ def model_fine_tuning():
     tokenized_test_dataset = test_dataset.map(tokenize_function, batched=True, remove_columns=["instruction", "response"])
 
     # 3.3: Baseline Benchmarking
-    st.write("--- Baseline Benchmarking (Pre-Fine-Tuning) ---")
+    print("--- Baseline Benchmarking (Pre-Fine-Tuning) ---")
     test_questions = [q['instruction'] for q in test_dataset]
     baseline_predictions = get_baseline_predictions(model, tokenizer, test_questions)
     for q, a in zip(test_questions, baseline_predictions):
-        st.write(f"Question: {q}\nBaseline Response: {a.strip()}")
-        st.write("-" * 20)
+        print(f"Question: {q}\nBaseline Response: {a.strip()}")
+        print("-" * 20)
 
     # 3.4: Fine-Tuning Setup
     hyperparameters = {
@@ -170,35 +131,21 @@ def model_fine_tuning():
     )
 
     # 3.4 & 3.5: Fine-Tuning
-    st.write("\n--- Starting Supervised Instruction Fine-Tuning ---")
+    print("\n--- Starting Supervised Instruction Fine-Tuning ---")
     trainer.train()
 
-    # Save final fine-tuned model locally
+    # Save final fine-tuned model
     final_ft_model_dir = os.path.join(project_root, "models", "gpt2-finetuned")
-    #os.makedirs(final_ft_model_dir, exist_ok=True)
-    #st.write(f"\nSaving Fine-tuned model locally")
-    #trainer.save_model(final_ft_model_dir)
-    final_model = trainer.model
-    #st.write(f"\nFine-tuned model saved locally to: {final_ft_model_dir}")
-
-    # Push to Hugging Face Hub automatically
-    hf_token = st.secrets.get("HUGGINGFACE_TOKEN", os.environ.get("HUGGINGFACE_TOKEN"))
-    repo_name = "amekala1/gpt2-finetuned"  # Change this to your desired repo name
-
-    if hf_token:
-        with st.spinner("Pushing model to Hugging Face Hub..."):
-            success = push_to_huggingface_hub(final_model, tokenizer, repo_name, hf_token)
-            if success:
-                st.success(f"Model available at: https://huggingface.co/{repo_name}")
-    else:
-        st.warning("Hugging Face token not found. Model not pushed to Hub.")
+    os.makedirs(final_ft_model_dir, exist_ok=True)
+    trainer.save_model(final_ft_model_dir)
+    print(f"\nFine-tuned model saved to: {final_ft_model_dir}")
 
     # Cleanup temporary directory
     if os.path.exists(output_temp_dir):
         shutil.rmtree(output_temp_dir)
-        st.write(f"Temporary directory '{output_temp_dir}' cleaned up.")
+        print(f"Temporary directory '{output_temp_dir}' cleaned up.")
 
     # Post-Fine-Tuning Evaluation
-    st.write("\n--- Post-Fine-Tuning Evaluation ---")
+    print("\n--- Post-Fine-Tuning Evaluation ---")
     results = trainer.evaluate()
-    st.write(results)
+    print(results)
