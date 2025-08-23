@@ -16,6 +16,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 from sentence_transformers import SentenceTransformer
 from rank_bm25 import BM25Okapi
+import streamlit as st
 
 # Optional OCR fallback (only used if import succeeds and page text is empty)
 try:
@@ -238,7 +239,7 @@ def create_bm25_index(chunks: List[dict], bm25_out: str) -> None:
 # ------------------------------------------------------------------------------------
 # Main
 # ------------------------------------------------------------------------------------
-
+@st.cache_resource
 def initialize():
     """
     Main preprocessing pipeline: extract, clean, chunk, embed, and index PDF data.
