@@ -51,6 +51,7 @@ st.markdown("Ask financial questions about Apple's 2023/2024 performance. Compar
 
 # Sidebar controls
 st.sidebar.header("⚙️ System Settings")
+
 # Only RAG System is available
 model_choice = 'RAG System'
 

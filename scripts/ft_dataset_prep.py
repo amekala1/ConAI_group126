@@ -3,6 +3,7 @@
 import json
 import os
 import re
+import streamlit as st
 
 def prepare_ft_dataset():
     """
@@ -16,7 +17,7 @@ def prepare_ft_dataset():
     if not os.path.exists(qa_text_path):
         raise FileNotFoundError(f"Q/A text file not found at: {qa_text_path}")
     
-    print(f"Reading and parsing Q/A pairs from: {qa_text_path}")
+    st.write(f"Reading and parsing Q/A pairs from: {qa_text_path}")
     
     with open(qa_text_path, "r", encoding="utf-8") as f:
         text_content = f.read()
@@ -46,6 +47,6 @@ def prepare_ft_dataset():
     with open(ft_dataset_path, "w", encoding="utf-8") as f:
         json.dump(ft_dataset, f, indent=4)
         
-    print(f"Fine-tuning dataset created with {len(ft_dataset)} pairs at {ft_dataset_path}")
+    st.write(f"Fine-tuning dataset created with {len(ft_dataset)} pairs at {ft_dataset_path}")
     
     return ft_dataset

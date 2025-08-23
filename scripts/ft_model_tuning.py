@@ -15,6 +15,7 @@ from transformers import (
     DataCollatorForLanguageModeling,
 )
 from sklearn.metrics import accuracy_score
+import streamlit as st
 
 def compute_metrics(eval_pred):
     """
@@ -59,7 +60,7 @@ def model_fine_tuning():
         model = GPT2LMHeadModel.from_pretrained(model_dir, local_files_only=True)
         tokenizer.pad_token = tokenizer.eos_token
     except OSError:
-        print("Local model not found. Downloading from Hugging Face...")
+        st.write("Local model not found. Downloading from Hugging Face...")
         tokenizer = GPT2Tokenizer.from_pretrained(model_name)
         model = GPT2LMHeadModel.from_pretrained(model_name)
         tokenizer.pad_token = tokenizer.eos_token
@@ -75,7 +76,7 @@ def model_fine_tuning():
         model = GPT2LMHeadModel.from_pretrained(model_dir, local_files_only=True)
         tokenizer.pad_token = tokenizer.eos_token
     except OSError:
-        print("Local model not found. Downloading from Hugging Face...")
+        st.write("Local model not found. Downloading from Hugging Face...")
         tokenizer = GPT2Tokenizer.from_pretrained(model_name)
         model = GPT2LMHeadModel.from_pretrained(model_name)
         tokenizer.pad_token = tokenizer.eos_token
@@ -105,7 +106,7 @@ def model_fine_tuning():
     tokenized_test_dataset = test_dataset.map(tokenize_function, batched=True, remove_columns=["instruction", "response"])
 
     # 3.3: Baseline Benchmarking
-    print("--- Baseline Benchmarking (Pre-Fine-Tuning) ---")
+    st.write("--- Baseline Benchmarking (Pre-Fine-Tuning) ---")
     test_questions = [q['instruction'] for q in test_dataset]
     baseline_predictions = get_baseline_predictions(model, tokenizer, test_questions)
     for q, a in zip(test_questions, baseline_predictions):
@@ -146,14 +147,14 @@ def model_fine_tuning():
     )
 
     # 3.4 & 3.5: Fine-Tuning
-    print("\n--- Starting Supervised Instruction Fine-Tuning ---")
+    st.write("\n--- Starting Supervised Instruction Fine-Tuning ---")
     trainer.train()
 
     # Save final fine-tuned model
     final_ft_model_dir = os.path.join(project_root, "models", "gpt2-finetuned")
     os.makedirs(final_ft_model_dir, exist_ok=True)
     trainer.save_model(final_ft_model_dir)
-    print(f"\nFine-tuned model saved to: {final_ft_model_dir}")
+    st.write(f"\nFine-tuned model saved to: {final_ft_model_dir}")
 
     # Cleanup temporary directory
     if os.path.exists(output_temp_dir):
@@ -161,6 +162,6 @@ def model_fine_tuning():
         print(f"Temporary directory '{output_temp_dir}' cleaned up.")
 
     # Post-Fine-Tuning Evaluation
-    print("\n--- Post-Fine-Tuning Evaluation ---")
+    st.write("\n--- Post-Fine-Tuning Evaluation ---")
     results = trainer.evaluate()
-    print(results)
+    st.write(results)
