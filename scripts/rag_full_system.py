@@ -33,8 +33,8 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(
 # Paths — adjust if your layout differs
 # ---------------------------
 def _project_paths() -> Dict[str, str]:
-    #script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.getcwd() #os.path.abspath(os.path.join(script_dir, os.pardir))
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.abspath(os.path.join(script_dir, os.pardir))
     return {
         "root": project_root,
         "embed_model": "sentence-transformers/all-MiniLM-L6-v2",
@@ -452,7 +452,7 @@ def run_rag_system(query: str, components, top_k: int = 5, candidate_k: int = 60
 # ---------------------------
 # CLI demo
 # ---------------------------
-if __name__ == "__main__":
+def rag_system():
     components = load_all_components()
     print("\nRAG system ready. Try sample queries.\n")
 

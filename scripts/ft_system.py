@@ -17,8 +17,8 @@ def load_ft_model():
 
     model_tuning.model_fine_tuning()
 
-    #script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.getcwd() #os.path.abspath(os.path.join(script_dir, os.pardir))
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.abspath(os.path.join(script_dir, os.pardir))
     model_dir = os.path.join(project_root, "models", "gpt2-finetuned")
 
     if not os.path.exists(model_dir):
