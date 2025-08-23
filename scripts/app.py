@@ -18,7 +18,7 @@ import preprocessing
 @st.cache_resource
 def load_rag_components():
     try:
-        return rag_full_system.rag_system()
+        return rag_full_system.load_all_components()
     except Exception as e:
         st.error(f"❌ Failed to load RAG components. Error: {e}")
         return None
@@ -32,7 +32,7 @@ def load_ft_components():
         return None
 
 # Initialize preprocessing and load components
-initialize = preprocessing.initialize()  # Ensure preprocessing is done before loading components
+#initialize = preprocessing.initialize()  # Ensure preprocessing is done before loading components
 rag_components = load_rag_components()
 ft_components = load_ft_components()
 
