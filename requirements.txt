@@ -1,4 +1,4 @@
-https://github.com/UKPLab/sentence-transformers/releases/download/v2.2.2/all-MiniLM-L6-v2.tar.gz
+https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
 sentence-transformers==2.2.2
 torch>=1.6.0
 transformers>=4.6.0
