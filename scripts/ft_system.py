@@ -18,16 +18,16 @@ def load_ft_model():
 
     model_tuning.model_fine_tuning()
 
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.abspath(os.path.join(script_dir, os.pardir))
-    model_dir = os.path.join(project_root, "models", "gpt2-finetuned")
+    #script_dir = os.path.dirname(os.path.abspath(__file__))
+    #project_root = os.path.abspath(os.path.join(script_dir, os.pardir))
+    #model_dir = os.path.join(project_root, "models", "gpt2-finetuned")
 
-    if not os.path.exists(model_dir):
-        raise FileNotFoundError(f"Fine-tuned model not found at: {model_dir}")
+    #if not os.path.exists(model_dir):
+    #    raise FileNotFoundError(f"Fine-tuned model not found at: {model_dir}")
 
     print("Loading fine-tuned GPT-2 model...")
-    tokenizer = GPT2Tokenizer.from_pretrained(model_dir)
-    model = GPT2LMHeadModel.from_pretrained(model_dir)
+    tokenizer = GPT2Tokenizer.from_pretrained("amekala1/gpt2-finetuned")
+    model = GPT2LMHeadModel.from_pretrained("amekala1/gpt2-finetuned")
     tokenizer.pad_token = tokenizer.eos_token
     print("Fine-tuned model loaded successfully.")
     
