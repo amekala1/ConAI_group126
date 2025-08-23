@@ -24,7 +24,7 @@ def load_ft_components():
         return None
 
 # Initialize preprocessing and load components
-#initialize = preprocessing.initialize()  # Ensure preprocessing is done before loading components
+initialize = preprocessing.initialize()  # Ensure preprocessing is done before loading components
 #rag_components = load_rag_components()
 ft_components = load_ft_components()
 
