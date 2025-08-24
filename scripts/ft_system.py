@@ -10,9 +10,9 @@ def load_ft_model():
     """
     Loads the fine-tuned GPT-2 model and tokenizer directly from Hugging Face Hub.
     """
-    prepare_ft_dataset.prepare_ft_dataset()
+    #prepare_ft_dataset.prepare_ft_dataset()
 
-    model_tuning.model_fine_tuning()
+    #model_tuning.model_fine_tuning()
 
     repo_name = "amekala1/gpt2-finetuned-grp126"  # 🔹 change to your actual repo
  
