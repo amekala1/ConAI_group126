@@ -300,13 +300,13 @@ def initialize():
 
     # 3) Embeddings & Indexes
     # Load embedding model from models path
-    embedding_model_path = os.path.join(project_root, "models", "all-MiniLM-L6-v2")
+    #embedding_model_path = os.path.join(project_root, "models", "all-MiniLM-L6-v2")
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    if os.path.exists(embedding_model_path):
-        embedding_model = SentenceTransformer(embedding_model_path, device=device)
-    else:
+    #if os.path.exists(embedding_model_path):
+    #    embedding_model = SentenceTransformer(embedding_model_path, device=device)
+    #else:
         # Download from HuggingFace if local model not found
-        embedding_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2", cache_folder= embedding_model_path, device=device)
+    embedding_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2", device=device)
 
     # FAISS
     faiss_out = os.path.join(data_dir, "faiss_index.bin")               
